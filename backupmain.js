@@ -1,4 +1,3 @@
-
 // Copyright 2018 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,10 +26,11 @@ const TOPK = 10;
 class Main {
   constructor(){
     // Initiate variables
+    this.infoTexts = [];
 
     //this.training = -1; // -1 when no class is being trained
     this.videoPlaying = false;
-    this.infoTexts = [];
+
     // Initiate deeplearn.js math and knn classifier objects
     this.knn = new KNNImageClassifier(NUM_CLASSES, TOPK, ENV.math);
 
@@ -40,38 +40,38 @@ class Main {
     this.video.setAttribute('playsinline', '');
 
     // Add video element to DOM
-    document.getElementById('main').appendChild(this.video);
-//const div = document.createElement('div');
+    document.body.appendChild(this.video);
+const div = document.createElement('div');
     // Create training buttons and info texts
-    /*for(let i=0;i<NUM_CLASSES; i++){
+    for(let i=0;i<NUM_CLASSES; i++){
       const div = document.createElement('div');
       document.body.appendChild(div);
-      div.style.marginBottom = '10px';
+      //div.style.margin = 'auto';
+
       // Create training button
-      const button = document.createElement('button')
+      /*const button = document.createElement('button')
       button.innerText = "Train "+i;
       div.appendChild(button);
+
       // Listen for mouse events when clicking the button
       button.addEventListener('mousedown', () => this.training = i);
       button.addEventListener('mouseup', () => this.training = -1);
+      */
+      //const heading = document.createElement('h2')
       // Create info text
       const infoText = document.createElement('span')
       infoText.innerText = " No examples added";
       div.appendChild(infoText);
       this.infoTexts.push(infoText);
     }
-    */
-    var imgcount = 80;
-    const infoText = document.createElement('p');
-    infoText.innerText = 'Training Model....';
-    //console.log(infoText);
-    document.getElementById('main').appendChild(infoText);
-    this.infoTexts.push(infoText);
+
+    var imgcount = 200;
+
 
     //Similing faces
     for(var i=1; i<=imgcount ; i++){
     const elem = document.createElement('img');
-    elem.setAttribute( "src", "Smiling/"+i+".jpg");
+    elem.setAttribute( "src", "disgust/"+i+".jpg");
     elem.setAttribute("height", "227");
     elem.setAttribute("width", "227");
     elem.setAttribute("id", "myimg"+i);
@@ -81,7 +81,7 @@ class Main {
   //Sad faces
   for(var k=1; k<=imgcount ; k++){
   const elem = document.createElement('img');
-  elem.setAttribute( "src", "Sad/"+k+".jpg");
+  elem.setAttribute( "src", "happy/"+k+".jpg");
   elem.setAttribute("height", "227");
   elem.setAttribute("width", "227");
   elem.setAttribute("id", "mysadimg"+k);
@@ -105,7 +105,7 @@ class Main {
   }
 
   start(){
-    var imgcount = 80;
+    var imgcount = 200;
     this.Smiling = 1;
     this.Sad = 0;
     //console.log(image);
@@ -119,6 +119,12 @@ class Main {
     context.drawImage(img, 0, 0 );
 
     var myData = context.getImageData(0, 0, 227, 227);
+
+    //var myData = document.getElementById('myimg'+j);
+/*if(myData && myData.style) {
+    myData.style.height = '270px';
+    myData.style.width = '270px';
+}*/
     const imagetest = Array3D.fromPixels(myData);
     this.knn.addImage(imagetest,this.Smiling );
     //console.log(imagetest);
@@ -134,10 +140,17 @@ class Main {
     context.drawImage(img, 0, 0 );
 
     var myData = context.getImageData(0, 0, 227, 227);
+    /*
+    var myData = document.getElementById('mysadimg'+l);
+if(myData && myData.style) {
+    myData.style.height = '270px';
+    myData.style.width = '270px';
+  }*/
     const imagetest = Array3D.fromPixels(myData);
-    this.knn.addImage(imagetest,this.Sad );
+    this.knn.addImage(imagetest,this.Sad);
     //console.log(imagetest);
-    }
+
+  }
   if (this.timer) {
       this.stop();
     }
@@ -157,48 +170,62 @@ class Main {
 
       // Get image data from video element
       const image = Array3D.fromPixels(this.video);
-
+      console.log(image);
 
       /*
+
       // Train class if one of the buttons is held down
       if(this.training != -1){
         // Add current image to classifier
         this.knn.addImage(image, this.training)
         console.log(this.training);
       }
+
       // If any examples have been added, run predict*/
       const exampleCount = this.knn.getClassExampleCount();
+      var classes = ['Face','Hand'];
       if(Math.max(...exampleCount) > 0){
         this.knn.predictClass(image)
         .then((res)=>{
           for(let i=0;i<NUM_CLASSES; i++){
             // Make the predicted class bold
-            /*if(res.classIndex == i){
+          /*  if(res.classIndex == i){
               this.infoTexts[i].style.fontWeight = 'bold';
             } else {
               this.infoTexts[i].style.fontWeight = 'normal';
-            }*/
+            }
+
             // Update info text
-
-              //this.infoTexts[i].innerText = ` ${res.classIndex} - ${res.confidences[i]*100}%`
-
-
+            if(exampleCount[i] > 0){
+              this.infoTexts[i].innerText = ` ${exampleCount[i]} examples - ${res.confidences[i]*100}%`
+            }
+            */
+              //console.log(res);
+            //console.log(exampleCount);
+            if(exampleCount[i] > 0){
+              this.infoTexts[i].innerText = ` ${classes[i]}  - ${res.confidences[i]*100}%`
+            }
+            console.log(res);
           }
-//console.log(res);
-//console.log(res.confidences);
+          /*if(res.classIndex == 1){
+            console.log('happy');
+          }
+          else {
+            console.log('neutral');
+          }*/
+          //console.log(res.classIndex);
 
           for(var i=0; i<NUM_CLASSES ; i++){
             //this.infoTexts[i].innerText = ` ${res.classIndex} - ${res.confidences[i]*100}%`
           }
 
-          if(res.classIndex == 1){
-            //this.infoText.innerText = 'Smiling';
-            console.log('Smiling');
+          /*if(res.classIndex == 1){
+            this.infoText.innerText = 'Smiling';
           }
           else {
-            //this.infoText.innerText = 'Sad';
-            console.log('Sad');
+            this.infoText.innerText = 'Frowning';
           }
+*/
 
         })
         // Dispose image when done

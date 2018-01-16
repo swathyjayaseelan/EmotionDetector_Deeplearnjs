@@ -48,7 +48,7 @@ var Main = function () {
     this.video = document.createElement('video');
     this.video.setAttribute('autoplay', '');
     this.video.setAttribute('playsinline', '');
-    //this.video.setAttribute('style','border-size: 2px; border-color: black; border-style: solid;')
+    this.video.setAttribute('style','border-size: 2px; border-color: black; border-style: solid;')
     // Add video element to DOM
     document.body.appendChild(this.video);
 const div = document.createElement('div');
@@ -82,10 +82,10 @@ const div = document.createElement('div');
     for (var i = 0; i < NUM_CLASSES; i++) {
       _loop(i);
     }
-var imgcount = 80;
+var imgcount = 200;
     for(var i=1; i<=imgcount ; i++){
     const elem = document.createElement('img');
-    elem.setAttribute( "src", "Smiling/"+i+".jpg");
+    elem.setAttribute( "src", "disgust/"+i+".jpg");
     elem.setAttribute("height", "227");
     elem.setAttribute("width", "227");
     elem.setAttribute("id", "myimg"+i);
@@ -95,7 +95,7 @@ var imgcount = 80;
 
     for(var j=1; j<=imgcount ; j++){
     const elem = document.createElement('img');
-    elem.setAttribute( "src", "Sad/"+j+".jpg");
+    elem.setAttribute( "src", "happy/"+j+".jpg");
     elem.setAttribute("height", "227");
     elem.setAttribute("width", "227");
     elem.setAttribute("id", "mysadimg"+j);
@@ -126,7 +126,7 @@ var imgcount = 80;
   _createClass(Main, [{
     key: 'start',
     value: function start() {
-      var imgcount = 80;
+      var imgcount = 200;
       this.Smiling = 1;
       this.Sad =0;
       for(var j=1; j<=imgcount; j++){
